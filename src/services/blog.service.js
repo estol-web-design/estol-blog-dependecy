@@ -178,7 +178,7 @@ export const getOnePost = async ({ model = DefaultPost, fieldsToPopulate = [], u
    }
 };
 
-export const createPost = async ({ model = DefaultPost, useLean = true, newPost = null }) => {
+export const createPost = async ({ model = DefaultPost, newPost = null }) => {
    try {
       // Check if new post parameters were provided, and if those parameters are valid
       if (!newPost) {
@@ -203,7 +203,7 @@ export const createPost = async ({ model = DefaultPost, useLean = true, newPost 
          return { success: false, message: "Failed to create new post.", code: 500 };
       }
 
-      return { success: true, code: 201 };
+      return { success: true, newPostID: createdPost._id, code: 201 };
    } catch (err) {
       return { success: false, message: err.message, code: 500, error: err };
    }
