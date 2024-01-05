@@ -1,11 +1,15 @@
+// blog.service.js
 import DOMPurify from "dompurify";
-import DefaultPost from "../models/post.model.js";
 import { validateNewPostData, validateUpdatePostData } from "../utils/validatePosts.js";
+import { getGlobalConfig } from "../config/blog.config.js";
+import DefaultPost from "../models/post.model.js";
 
-export const getAllPosts = async ({ model = DefaultPost, fieldsToPopulate = [], useLean = true }) => {
+const { PostModel } = getGlobalConfig();
+
+export const getAllPosts = async ({ fieldsToPopulate = [], useLean = true }) => {
    try {
       // Initializing search query
-      let query = model.find();
+      let query = PostModel.find();
 
       // Check if the user needs to populate any fields and perform population
       if (fieldsToPopulate.length > 0) {
@@ -26,7 +30,7 @@ export const getAllPosts = async ({ model = DefaultPost, fieldsToPopulate = [], 
    }
 };
 
-export const getLastPosts = async ({ model = DefaultPost, fieldsToPopulate = [], originalQuantity = null, flag = null, useLean = true }) => {
+export const getLastPosts = async ({ fieldsToPopulate = [], originalQuantity = null, flag = null, useLean = true }) => {
    // Check if original quantity parameter is valid. If it's not valid assign default value
    const quantity = typeof originalQuantity === "number" && originalQuantity > 0 ? originalQuantity : 10;
 
@@ -38,7 +42,7 @@ export const getLastPosts = async ({ model = DefaultPost, fieldsToPopulate = [],
       const searchParams = { createdAt: { $lt: dateFlag } };
 
       // Initialize search query with sort and limit methods
-      let query = model.find(searchParams).sort("-createdAt").limit(quantity);
+      let query = PostModel.find(searchParams).sort("-createdAt").limit(quantity);
 
       // Check if the user needs to populate any fields and perform population
       if (fieldsToPopulate.length > 0) {
@@ -53,14 +57,14 @@ export const getLastPosts = async ({ model = DefaultPost, fieldsToPopulate = [],
          return { success: false, message: "No post found", code: 404 };
       }
 
-      const newFlag = posts[posts.length-1].createdAt;
+      const newFlag = posts[posts.length - 1].createdAt;
 
       // Object to return
       const returnObj = { success: true, posts, code: 200, newFlag };
 
       // Check if quantity parameter provided by the user is an invalid number, and add a message to the object to return
       if (typeof originalQuantity === "number" && originalQuantity < 1) {
-         returnObj.message = `Invalid value of ${originalQty} assigned to quantity parameter, returning 10 posts by default.`;
+         returnObj.message = `Invalid value of ${originalQuantity} assigned to quantity parameter, returning 10 posts by default.`;
       }
 
       return returnObj;
@@ -69,13 +73,13 @@ export const getLastPosts = async ({ model = DefaultPost, fieldsToPopulate = [],
    }
 };
 
-export const getTrendingPosts = async ({ model = DefaultPost, fieldsToPopulate = [], originalQuantity = null, useLean = true }) => {
+export const getTrendingPosts = async ({  fieldsToPopulate = [], originalQuantity = null, useLean = true }) => {
    // Check if original quantity parameter is valid. If it's not valid assign default value
    const quantity = typeof originalQuantity === "number" && originalQuantity > 0 ? originalQuantity : 10;
 
    try {
       // Initialize search query with sort and limit methods
-      let query = model.find().sort("-views").limit(quantity);
+      let query = PostModel.find().sort("-views").limit(quantity);
 
       // Check if the user needs to populate any fields and perform population
       if (fieldsToPopulate.length > 0) {
@@ -94,8 +98,8 @@ export const getTrendingPosts = async ({ model = DefaultPost, fieldsToPopulate =
       const returnObj = { success: true, posts, code: 200 };
 
       // Check if quantity parameter provided by the user is an invalid number, and add a message to the object to return
-      if (typeof originalQty === "number" && originalQty < 1) {
-         returnObj.message = `Invalid value of ${originalQty} assigned to quantity parameter, returning 10 posts by default.`;
+      if (typeof originalQuantity === "number" && originalQuantity < 1) {
+         returnObj.message = `Invalid value of ${originalQuantity} assigned to quantity parameter, returning 10 posts by default.`;
       }
 
       return returnObj;
@@ -104,7 +108,7 @@ export const getTrendingPosts = async ({ model = DefaultPost, fieldsToPopulate =
    }
 };
 
-export const searchPosts = async ({ model = DefaultPost, fieldsToPopulate = [], originalQuantity = null, useLean = true, flag = null, searchStr = null }) => {
+export const searchPosts = async ({ fieldsToPopulate = [], originalQuantity = null, useLean = true, flag = null, searchStr = null }) => {
    // Check if original quantity parameter is valid. If it's not valid assign default value
    const quantity = typeof originalQuantity === "number" && originalQuantity > 0 ? originalQuantity : 10;
 
@@ -121,7 +125,7 @@ export const searchPosts = async ({ model = DefaultPost, fieldsToPopulate = [], 
       const searchParams = { createdAt: { $lt: dateFlag }, $or: [{ title: { $regex: searchStr, options: "i" } }, { content: searchStr, options: "i" }] };
 
       // Initialize search query with sort and limit methods
-      let query = model.find(searchParams).sort("-createdAt").limit(quantity);
+      let query = PostModel.find(searchParams).sort("-createdAt").limit(quantity);
 
       // Check if the user needs to populate any fields and perform population
       if (fieldsToPopulate.length > 0) {
@@ -149,7 +153,7 @@ export const searchPosts = async ({ model = DefaultPost, fieldsToPopulate = [], 
    }
 };
 
-export const getOnePost = async ({ model = DefaultPost, fieldsToPopulate = [], useLean = true, id = null }) => {
+export const getOnePost = async ({ fieldsToPopulate = [], useLean = true, id = null }) => {
    try {
       // Check if an id was provided to perform post search
       if (!id) {
@@ -157,7 +161,7 @@ export const getOnePost = async ({ model = DefaultPost, fieldsToPopulate = [], u
       }
 
       // Initialize post search query
-      let query = model.findById(id);
+      let query = PostModel.findById(id);
 
       // Check if the user needs to populate any fields and perform population
       if (fieldsToPopulate.length > 0) {
@@ -178,12 +182,12 @@ export const getOnePost = async ({ model = DefaultPost, fieldsToPopulate = [], u
    }
 };
 
-export const createPost = async ({ model = DefaultPost, newPost = null }) => {
+export const createPost = async ({newPost = null }) => {
    try {
       // Check if new post parameters were provided, and if those parameters are valid
       if (!newPost) {
          return { success: false, message: `No post data ("newPost" parameter) provided to create the new post`, code: 400 };
-      } else if (model === DefaultPost) {
+      } else if (PostModel === DefaultPost) {
          const validPost = validateNewPostData(newPost);
 
          if (!validPost.success) {
@@ -196,7 +200,7 @@ export const createPost = async ({ model = DefaultPost, newPost = null }) => {
       newPost.content = sanitizedHTML;
 
       // Create post with validated parameters
-      const createdPost = await model.create(newPost);
+      const createdPost = await PostModel.create(newPost);
 
       // Verify if post was successfully created
       if (!createdPost) {
@@ -209,7 +213,7 @@ export const createPost = async ({ model = DefaultPost, newPost = null }) => {
    }
 };
 
-export const updatePost = async ({ model = DefaultPost, fieldsToPopulate = [], useLean = true, id = null, updatedData = null }) => {
+export const updatePost = async ({ fieldsToPopulate = [], useLean = true, id = null, updatedData = null }) => {
    try {
       // Check if an id was provided to perform post search
       if (!id) {
@@ -219,7 +223,7 @@ export const updatePost = async ({ model = DefaultPost, fieldsToPopulate = [], u
       // Check if update post parameters ("updateData") were provided, and if those parameters are valid
       if (!updatedData) {
          return { success: false, message: `No updeted post data ("updatedData" parameter) provided to update this post`, code: 400 };
-      } else if (model === DefaultPost) {
+      } else if (PostModel === DefaultPost) {
          const validData = validateUpdatePostData(updatedData);
 
          if (!validData.success) {
@@ -235,7 +239,7 @@ export const updatePost = async ({ model = DefaultPost, fieldsToPopulate = [], u
       }
 
       // Initialize post update query
-      let query = model.findByIdAndUpdate(id, updatedData);
+      let query = PostModel.findByIdAndUpdate(id, updatedData);
 
       // Check if the user needs to populate any fields and perform population
       if (fieldsToPopulate.length > 0) {
@@ -256,7 +260,7 @@ export const updatePost = async ({ model = DefaultPost, fieldsToPopulate = [], u
    }
 };
 
-export const deletePost = async ({ model = DefaultPost, useLean = true, id = null }) => {
+export const deletePost = async ({ useLean = true, id = null }) => {
    try {
       // Check if an id was provided to perform post search
       if (!id) {
@@ -264,8 +268,8 @@ export const deletePost = async ({ model = DefaultPost, useLean = true, id = nul
       }
 
       // Delete post
-      let query = model.findByIdAndDelete(id);
-      
+      let query = PostModel.findByIdAndDelete(id);
+
       // Check if the user needs a complete instance of the model; otherwise, send a plain JavaScript object
       const deletedPost = !useLean ? await query : await query.lean();
 
