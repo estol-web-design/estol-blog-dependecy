@@ -1,3 +1,4 @@
+// validatePosts.js
 export const validateNewPostData = (newPost) => {
    const { author, title, content } = newPost;
    const missingParameters = [];
@@ -24,7 +25,7 @@ export const validateNewPostData = (newPost) => {
 };
 
 export const validateUpdatePostData = (updatedData) => {
-   const {author, title, content} = updatedData;
+   const { author, title, content } = updatedData;
 
    const paramsWithInvalidValue = [];
 
@@ -37,4 +38,4 @@ export const validateUpdatePostData = (updatedData) => {
    }
 
    return { success: true, message: `All parameters were validated.` };
-}
+};
