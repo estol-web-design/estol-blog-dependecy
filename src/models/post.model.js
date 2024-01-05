@@ -1,3 +1,4 @@
+// post.model.js
 import { Schema, model } from "mongoose";
 const { ObjectId } = Schema.Types;
 
