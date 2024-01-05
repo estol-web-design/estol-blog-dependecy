@@ -1,3 +1,4 @@
+// blog.controller.js
 import * as blogService from "../services/blog.service.js";
 
 const capitalizeFirstLetter = (text) => {
