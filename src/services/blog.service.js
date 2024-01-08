@@ -5,12 +5,12 @@ import { validateNewPostData, validateUpdatePostData } from "../utils/validatePo
 import { configEmitter, getConfig } from 'estol-blog/src/config/blog.config.js';
 
 let Post = getConfig().PostModel;
-let defaultPostModel = false;
+let defaultPost = false;
 
-configEmitter.on("update", ({databaseURL, PostModel}) => {
+configEmitter.on("update", ({ PostModel, mongoose}) => {
    Post = PostModel;
-   if (databaseURL) {
-      defaultPostModel = true;
+   if (mongoose) {
+      defaultPost = true;
    }
 });
 
@@ -196,7 +196,7 @@ export const createPost = async ({newPost = null }) => {
       // Check if new post parameters were provided, and if those parameters are valid
       if (!newPost) {
          return { success: false, message: `No post data ("newPost" parameter) provided to create the new post`, code: 400 };
-      } else if (defaultPostModel) {
+      } else if (defaultPost) {
          const validPost = validateNewPostData(newPost);
 
          if (!validPost.success) {
@@ -235,7 +235,7 @@ export const updatePost = async ({ fieldsToPopulate = [], useLean = true, id = n
       // Check if update post parameters ("updateData") were provided, and if those parameters are valid
       if (!updatedData) {
          return { success: false, message: `No updeted post data ("updatedData" parameter) provided to update this post`, code: 400 };
-      } else if (defaultPostModel) {
+      } else if (defaultPost) {
          const validData = validateUpdatePostData(updatedData);
          
          if (!validData.success) {

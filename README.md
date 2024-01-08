@@ -15,11 +15,11 @@ npm install estol-blog
 ### Importing and initializing
 
 ```javascript
-import { configureBlogDependency, blogController } from "estol-blog";
+import blogController, { configureBlogDependency } from "estol-blog";
 
 // Configure the dependency with your database URL
 configureBlogDependency({
-   databaseURL: "your-database-url",
+   mongoose: "your-mongoose-instance",
    model: YourPostModel, // Replace YourPostModel with your Mongoose model
 });
 
@@ -97,13 +97,13 @@ estol-blog uses Mongoose for database interactions. Make sure to have Mongoose i
 
 Configures the `estol-blog` dependency with the provided configuration.
 
--  `config`: An object containing the configuration options. It should have either a `databaseURL` or a `model`, but not both.
+-  `config`: An object containing the configuration options. It should have either a `mongoose` or a `model`, but not both.
 
-   -  `databaseURL`: The URL of the database to connect to. If provided, the dependency will use its own default model for blog posts.
+   -  `mongoose`: The complete Mongoose instance of your project. If provided, the dependency will use its own default model for blog posts.
 
    -  `model`: The Mongoose model instance from the user's project. If provided, the dependency will use the user's Mongoose model for blog posts.
 
-**Note**: The user must provide either `databaseURL` or `model`, not both. If `databaseURL` is provided, the dependency connects to the database using its default model. If `model` is provided, the dependency uses the user's Mongoose model. It's mandatory to provide one of the two options; providing both is not allowed.
+**Note**: The user must provide either `mongoose` or `model`, not both. If `mongoose` instance is provided, the dependency connects to the database using its default model. If `model` is provided, the dependency uses the user's Mongoose model. It's mandatory to provide one of the two options; providing both is not allowed.
 
 **Important**: If the user decides to provide a model, it is important that this model has at least the same fields in the default model(author, title, content and views) to avoid dependency's malfunctions.
 
@@ -129,8 +129,6 @@ const postSchema = new Schema(
 );
 
 const Post = model("Post", postSchema);
-
-export default Post;
 ```
 
 **Important**: If you opt to use the default model, it's crucial to ensure that your project includes a Mongoose model for "User" to prevent errors. The "author" field in the default blog post model references the "User" model. If the "User" model is not defined in your project, it may lead to reference errors. Please make sure that the "User" model is available in your project to maintain the integrity of the default blog post model.

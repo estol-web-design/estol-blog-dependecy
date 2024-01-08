@@ -1,8 +1,9 @@
 // post.model.js
-import { Schema, model } from "mongoose";
-const { ObjectId } = Schema.Types;
 
-function createSchema() {
+function createSchema(mongoose) {
+   const { Schema, model } = mongoose;
+   const { ObjectId } = Schema.Types;
+
    const postSchema = new Schema(
       {
          author: { type: ObjectId, ref: "User", required: true },

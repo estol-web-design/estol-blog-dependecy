@@ -1,6 +1,6 @@
 {
   "name": "estol-blog",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "Blog's post management dependency",
   "main": "src/index.js",
   "scripts": {
