@@ -1,6 +1,6 @@
 {
-  "name": "estol-blog-dependency",
-  "version": "1.0.0",
+  "name": "estol-blog",
+  "version": "1.1.1",
   "description": "Blog's post management dependency",
   "main": "src/index.js",
   "scripts": {
@@ -8,16 +8,39 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/estol-web-design/dependency-auth.git"
+    "url": "git+https://github.com/estol-web-design/estol-blog-dependency.git"
   },
   "keywords": [
-    "auth",
-    "oauth",
-    "authorization",
-    "passport"
+    "blog",
+    "nodejs",
+    "mongodb",
+    "mongoose",
+    "dependency",
+    "estol-blog",
+    "post-management",
+    "blog-operations",
+    "npm-package",
+    "javascript",
+    "backend",
+    "web-development",
+    "mongodb-interactions",
+    "model-management",
+    "data-management",
+    "npm",
+    "package",
+    "database",
+    "API",
+    "blog-posts",
+    "pagination",
+    "search",
+    "CRUD",
+    "Node.js-dependency",
+    "Mongoose-dependency",
+    "MIT-license"
   ],
   "dependencies": {
     "dompurify": "^3.0.7",
+    "jsdom": "^23.2.0",
     "mongoose": "^8.0.3"
   },
   "author": "Esteban Guillermo Olivera Pereyra",

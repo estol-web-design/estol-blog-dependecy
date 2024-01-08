@@ -2,18 +2,23 @@
 import { Schema, model } from "mongoose";
 const { ObjectId } = Schema.Types;
 
-const defaultPostSchema = new Schema(
-   {
-      author: { type: ObjectId, ref: "User", required: true },
-      title: { type: String, required: true },
-      content: { type: String, required: true },
-      views: { type: Number, default: 0 },
-   },
-   {
-      timestamps: true,
-   }
-);
+function createSchema() {
+   const postSchema = new Schema(
+      {
+         author: { type: ObjectId, ref: "User", required: true },
+         title: { type: String, required: true },
+         content: { type: String, required: true },
+         views: { type: Number, default: 0 },
+      },
+      {
+         timestamps: true,
+      }
+   );
+   
+   const Post = model("Post", postSchema);
 
-const DefaultPost = model("DefaultPost", defaultPostSchema);
+   return Post
+}
 
-export default DefaultPost;
+
+export default createSchema;

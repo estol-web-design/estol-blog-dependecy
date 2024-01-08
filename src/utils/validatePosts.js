@@ -8,7 +8,7 @@ export const validateNewPostData = (newPost) => {
    if (!content) missingParameters.push("content");
 
    if (missingParameters.length > 0) {
-      return { success: false, message: `Missing required parameter(s): "${missingParameters.join(" ")}"` };
+      return { success: false, message: `Missing required parameter(s): "${missingParameters.join(" ")}"`, code: 400 };
    }
 
    const paramsWithInvalidValue = [];
