@@ -2,7 +2,7 @@
 import createDOMPurify from 'dompurify';
 import { JSDOM } from "jsdom";
 import { validateNewPostData, validateUpdatePostData } from "../utils/validatePosts.js";
-import { configEmitter, getConfig } from 'estol-blog/src/config/blog.config.js';
+import { configEmitter, getConfig } from '../config/blog.config.js';
 
 let Post = getConfig().PostModel;
 let defaultPost = false;
